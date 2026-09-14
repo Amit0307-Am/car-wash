@@ -1,6 +1,36 @@
 import { requireAdminAccess } from "@/lib/admin/auth";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
+function getStatusClasses(status: string) {
+  switch (status) {
+    case "pending":
+      return "bg-amber-500/10 text-amber-200 ring-1 ring-inset ring-amber-400/40";
+    case "confirmed":
+      return "bg-emerald-500/10 text-emerald-200 ring-1 ring-inset ring-emerald-400/40";
+    case "completed":
+      return "bg-sky-500/10 text-sky-200 ring-1 ring-inset ring-sky-400/40";
+    case "cancelled":
+      return "bg-red-500/10 text-red-200 ring-1 ring-inset ring-red-400/40";
+    default:
+      return "bg-slate-500/10 text-slate-200 ring-1 ring-inset ring-slate-400/40";
+  }
+}
+
+function getStatusLabel(status: string) {
+  switch (status) {
+    case "pending":
+      return "Pending";
+    case "confirmed":
+      return "Confirmed";
+    case "completed":
+      return "Completed";
+    case "cancelled":
+      return "Cancelled";
+    default:
+      return status;
+  }
+}
+
 async function getBookings() {
   const supabase = createServerSupabaseClient();
 
@@ -85,7 +115,7 @@ export default async function AdminPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900/80 shadow-2xl shadow-slate-950/40">
+      <div className="hidden overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900/80 shadow-2xl shadow-slate-950/40 md:block">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-white/10 text-left">
             <thead className="bg-slate-950/60">
@@ -111,12 +141,15 @@ export default async function AdminPage() {
                 <th className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                   Price
                 </th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/10">
               {bookings.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-4 py-10 text-center text-slate-400">
+                  <td colSpan={8} className="px-4 py-10 text-center text-slate-400">
                     No bookings have been created yet.
                   </td>
                 </tr>
@@ -126,7 +159,6 @@ export default async function AdminPage() {
                 <tr key={booking.id} className="align-top">
                   <td className="px-4 py-4">
                     <div className="font-semibold text-white">{booking.booking_code}</div>
-                    <div className="mt-1 text-xs text-slate-400">{booking.id}</div>
                   </td>
                   <td className="px-4 py-4">
                     <div className="font-medium text-white">{booking.customer_name}</div>
@@ -145,41 +177,62 @@ export default async function AdminPage() {
                     <div className="mt-1 text-sm text-slate-400">{booking.booking_time}</div>
                   </td>
                   <td className="px-4 py-4">
-                    <span
-                      className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
-                        booking.status === "confirmed"
-                          ? "bg-emerald-500/10 text-emerald-300"
-                          : booking.status === "pending"
-                            ? "bg-amber-500/10 text-amber-300"
-                            : "bg-slate-500/10 text-slate-300"
-                      }`}
-                    >
-                      {booking.status}
+                    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${getStatusClasses(booking.status)}`}>
+                      {getStatusLabel(booking.status)}
                     </span>
                   </td>
                   <td className="px-4 py-4 text-slate-200">₹{booking.price_snapshot}</td>
                   <td className="px-4 py-4">
                     <div className="flex flex-wrap gap-2">
-                      <form action={`/api/admin/bookings/${booking.id}`} method="post">
-                        <input type="hidden" name="action" value="confirm" />
-                        <button
-                          type="submit"
-                          className="rounded-full border border-emerald-500/50 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-200 transition hover:bg-emerald-500/20"
-                        >
-                          Confirm
-                        </button>
-                      </form>
+                      {booking.status === "pending" ? (
+                        <>
+                          <form action={`/api/admin/bookings/${booking.id}`} method="post">
+                            <input type="hidden" name="action" value="confirm" />
+                            <button
+                              type="submit"
+                              className="rounded-full border border-emerald-500/50 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-200 transition hover:bg-emerald-500/20"
+                            >
+                              Confirm
+                            </button>
+                          </form>
 
-                      <form action={`/api/admin/bookings/${booking.id}`} method="post">
-                        <input type="hidden" name="action" value="cancel" />
-                        <button
-                          type="submit"
-                          className="rounded-full border border-amber-500/50 bg-amber-500/10 px-3 py-1.5 text-xs font-medium text-amber-200 transition hover:bg-amber-500/20"
-                        >
-                          Cancel
-                        </button>
-                      </form>
+                          <form action={`/api/admin/bookings/${booking.id}`} method="post">
+                            <input type="hidden" name="action" value="cancel" />
+                            <button
+                              type="submit"
+                              className="rounded-full border border-red-500/50 bg-red-500/10 px-3 py-1.5 text-xs font-medium text-red-200 transition hover:bg-red-500/20"
+                            >
+                              Cancel
+                            </button>
+                          </form>
+                        </>
+                      ) : booking.status === "confirmed" ? (
+                        <>
+                          <form action={`/api/admin/bookings/${booking.id}`} method="post">
+                            <input type="hidden" name="action" value="complete" />
+                            <button
+                              type="submit"
+                              className="rounded-full border border-sky-500/50 bg-sky-500/10 px-3 py-1.5 text-xs font-medium text-sky-200 transition hover:bg-sky-500/20"
+                            >
+                              Complete
+                            </button>
+                          </form>
 
+                          <form action={`/api/admin/bookings/${booking.id}`} method="post">
+                            <input type="hidden" name="action" value="cancel" />
+                            <button
+                              type="submit"
+                              className="rounded-full border border-red-500/50 bg-red-500/10 px-3 py-1.5 text-xs font-medium text-red-200 transition hover:bg-red-500/20"
+                            >
+                              Cancel
+                            </button>
+                          </form>
+                        </>
+                      ) : (
+                        <span className="text-xs font-medium text-slate-400">
+                          {booking.status === "completed" ? "Completed" : "Cancelled"}
+                        </span>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -187,6 +240,118 @@ export default async function AdminPage() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      <div className="space-y-4 md:hidden">
+        {bookings.length === 0 ? (
+          <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 text-center text-slate-400">
+            No bookings have been created yet.
+          </div>
+        ) : null}
+
+        {bookings.map((booking) => (
+          <div key={booking.id} className="rounded-3xl border border-white/10 bg-slate-900/80 p-4 shadow-xl shadow-slate-950/30">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-slate-400">
+                  Booking
+                </p>
+                <p className="mt-1 text-lg font-semibold text-white">{booking.booking_code}</p>
+              </div>
+              <span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-medium ${getStatusClasses(booking.status)}`}>
+                {getStatusLabel(booking.status)}
+              </span>
+            </div>
+
+            <div className="mt-4 space-y-2 text-sm text-slate-300">
+              <div>
+                <span className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Customer</span>
+                <p className="mt-1 font-medium text-white">{booking.customer_name}</p>
+                <p className="text-slate-400">{booking.mobile_number}</p>
+              </div>
+
+              <div>
+                <span className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Service</span>
+                <p className="mt-1 text-white">{booking.serviceName}</p>
+              </div>
+
+              <div>
+                <span className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Vehicle</span>
+                <p className="mt-1 text-white">{booking.vehicleTypeName}</p>
+                <p className="text-slate-400">{booking.vehicle_model}</p>
+                {booking.vehicle_number ? <p className="text-slate-500">{booking.vehicle_number}</p> : null}
+              </div>
+
+              <div className="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-slate-950/40 px-3 py-2">
+                <div>
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-slate-500">When</span>
+                  <p className="mt-1 text-white">{booking.booking_date}</p>
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Time</span>
+                  <p className="mt-1 text-white">{booking.booking_time}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-slate-950/40 px-3 py-2">
+                <span className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Price</span>
+                <p className="font-medium text-white">₹{booking.price_snapshot}</p>
+              </div>
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              {booking.status === "pending" ? (
+                <>
+                  <form action={`/api/admin/bookings/${booking.id}`} method="post" className="flex-1">
+                    <input type="hidden" name="action" value="confirm" />
+                    <button
+                      type="submit"
+                      className="w-full rounded-full border border-emerald-500/50 bg-emerald-500/10 px-3 py-2 text-sm font-medium text-emerald-200"
+                    >
+                      Confirm
+                    </button>
+                  </form>
+
+                  <form action={`/api/admin/bookings/${booking.id}`} method="post" className="flex-1">
+                    <input type="hidden" name="action" value="cancel" />
+                    <button
+                      type="submit"
+                      className="w-full rounded-full border border-red-500/50 bg-red-500/10 px-3 py-2 text-sm font-medium text-red-200"
+                    >
+                      Cancel
+                    </button>
+                  </form>
+                </>
+              ) : booking.status === "confirmed" ? (
+                <>
+                  <form action={`/api/admin/bookings/${booking.id}`} method="post" className="flex-1">
+                    <input type="hidden" name="action" value="complete" />
+                    <button
+                      type="submit"
+                      className="w-full rounded-full border border-sky-500/50 bg-sky-500/10 px-3 py-2 text-sm font-medium text-sky-200"
+                    >
+                      Complete
+                    </button>
+                  </form>
+
+                  <form action={`/api/admin/bookings/${booking.id}`} method="post" className="flex-1">
+                    <input type="hidden" name="action" value="cancel" />
+                    <button
+                      type="submit"
+                      className="w-full rounded-full border border-red-500/50 bg-red-500/10 px-3 py-2 text-sm font-medium text-red-200"
+                    >
+                      Cancel
+                    </button>
+                  </form>
+                </>
+              ) : (
+                <div className="w-full rounded-full border border-white/10 bg-white/5 px-3 py-2 text-center text-sm font-medium text-slate-300">
+                  {booking.status === "completed" ? "Completed" : "Cancelled"}
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
     </main>
   );

@@ -6,6 +6,19 @@ export function ServiceCard({ service }: { service: Service }) {
     <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-slate-900/80 shadow-xl shadow-slate-950/30 transition-transform duration-200 hover:-translate-y-1">
       <div className={`relative h-52 overflow-hidden bg-gradient-to-br ${service.accent}`}>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.38),_transparent_45%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(15,23,42,0.15),rgba(15,23,42,0.55))]" />
+        <div className="absolute left-5 top-5 rounded-full border border-white/20 bg-slate-950/30 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-white/90 backdrop-blur-sm">
+          {service.name.split(" ")[0]}
+        </div>
+        <div className="absolute right-5 top-5 flex h-14 w-14 items-center justify-center rounded-full border border-white/20 bg-white/10 text-lg font-black text-white/90 shadow-lg shadow-slate-950/20 backdrop-blur-sm">
+          ✦
+        </div>
+        <div className="absolute inset-x-4 bottom-4 rounded-full border border-white/20 bg-slate-950/35 px-3 py-2 backdrop-blur-sm">
+          <div className="flex items-center justify-between gap-3 text-[10px] font-medium uppercase tracking-[0.2em] text-slate-100">
+            <span>{service.duration}</span>
+            <span>Car care</span>
+          </div>
+        </div>
         <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-slate-950 to-transparent" />
       </div>
 

@@ -46,6 +46,16 @@ export async function POST(
       if (updateResult.error) {
         throw new Error(updateResult.error.message || "Unable to confirm booking.");
       }
+    } else if (action === "complete") {
+      const updateResult = await supabase
+        .from("bookings")
+        .update({ status: "completed" })
+        .eq("id", id)
+        .select("id");
+
+      if (updateResult.error) {
+        throw new Error(updateResult.error.message || "Unable to complete booking.");
+      }
     } else if (action === "cancel") {
       const updateResult = await supabase
         .from("bookings")
