@@ -2,7 +2,7 @@ import type { Review } from "@/config/business";
 
 export function ReviewCard({ review }: { review: Review }) {
   return (
-    <article className="flex h-full flex-col rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-slate-950/30">
+    <article className="flex h-full flex-col rounded-3xl border border-white/10 bg-slate-900/70 p-4 shadow-lg shadow-slate-950/30 sm:p-6">
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-base font-semibold text-white">{review.name}</p>
@@ -15,9 +15,9 @@ export function ReviewCard({ review }: { review: Review }) {
         </div>
       </div>
 
-      <p className="mt-5 flex-1 text-sm leading-7 text-slate-300">“{review.review}”</p>
+      <p className="mt-4 flex-1 text-sm leading-6 text-slate-300 sm:leading-7">“{review.review}”</p>
 
-      <div className="mt-5 border-t border-white/10 pt-4 text-xs uppercase tracking-[0.2em] text-slate-400">
+      <div className="mt-4 border-t border-white/10 pt-3 text-[10px] uppercase tracking-[0.2em] text-slate-400 sm:text-xs">
         {review.date}
       </div>
     </article>

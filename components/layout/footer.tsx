@@ -4,7 +4,7 @@ import { business, services } from "@/config/business";
 export function Footer() {
   return (
     <footer className="border-t border-white/10 bg-slate-950">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.4fr_1fr_1fr_1.1fr] lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[1.4fr_1fr_1fr_1.1fr] lg:gap-10 lg:px-8 lg:py-12">
         <div>
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-500 text-lg font-black text-slate-950">
@@ -16,7 +16,7 @@ export function Footer() {
               </p>
             </div>
           </div>
-          <p className="mt-5 max-w-md text-sm leading-7 text-slate-300">
+          <p className="mt-4 max-w-md text-sm leading-6 text-slate-300 lg:mt-5 lg:leading-7">
             {business.shortDescription}
           </p>
         </div>
@@ -63,8 +63,8 @@ export function Footer() {
           <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-white">
             Visit us
           </h3>
-          <p className="mt-4 text-sm leading-7 text-slate-300">{business.address}</p>
-          <p className="mt-4 text-sm text-slate-300">{business.openingHours}</p>
+          <p className="mt-3 text-sm leading-6 text-slate-300 lg:mt-4 lg:leading-7">{business.address}</p>
+          <p className="mt-3 text-sm text-slate-300 lg:mt-4">{business.openingHours}</p>
         </div>
       </div>
 

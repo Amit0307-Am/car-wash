@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import { business } from "@/config/business";
 import { Button } from "@/components/ui/button";
 
@@ -16,24 +17,46 @@ const navItems = [
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  useEffect(() => {
+    if (!menuOpen) {
+      document.body.style.overflow = "";
+      return;
+    }
+
+    document.body.style.overflow = "hidden";
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [menuOpen]);
+
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-500 text-lg font-black text-slate-950">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-500 text-base font-black text-slate-950 sm:h-10 sm:w-10 sm:text-lg">
             A
           </div>
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-300 sm:text-sm">
               {business.businessName}
             </p>
-            <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
+            <p className="text-[9px] uppercase tracking-[0.2em] text-slate-400 sm:text-[10px]">
               Premium detailing
             </p>
           </div>
         </Link>
 
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-8 lg:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -45,7 +68,7 @@ export function Navbar() {
           ))}
         </div>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-3 lg:flex">
           <Button href={`tel:${business.phone.replace(/\s+/g, "")}`} variant="secondary">
             Call
           </Button>
@@ -57,11 +80,13 @@ export function Navbar() {
 
         <button
           type="button"
-          aria-label="Toggle navigation menu"
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white md:hidden"
+          aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-controls="mobile-menu"
+          aria-expanded={menuOpen}
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition hover:border-amber-400/60 hover:bg-white/10 lg:hidden"
           onClick={() => setMenuOpen((state) => !state)}
         >
-          <span className="sr-only">Open menu</span>
+          <span className="sr-only">Toggle menu</span>
           <div className="flex flex-col gap-1.5">
             <span className="block h-0.5 w-5 bg-white" />
             <span className="block h-0.5 w-5 bg-white" />
@@ -71,26 +96,45 @@ export function Navbar() {
       </nav>
 
       {menuOpen ? (
-        <div className="border-t border-white/10 bg-slate-950 md:hidden">
-          <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="rounded-2xl px-3 py-3 text-base font-medium text-slate-200 hover:bg-white/5"
+        <div id="mobile-menu" className="border-t border-white/10 bg-slate-950 lg:hidden">
+          <div className="mx-auto max-w-7xl px-4 py-3">
+            <div className="mb-2 flex items-center justify-between">
+              <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-slate-400">Menu</p>
+              <button
+                type="button"
+                aria-label="Close navigation menu"
+                className="rounded-full border border-white/10 px-2.5 py-1 text-xs font-medium text-slate-200 hover:border-amber-400/60 hover:text-white"
                 onClick={() => setMenuOpen(false)}
               >
-                {item.label}
-              </Link>
-            ))}
-            <div className="mt-3 grid grid-cols-2 gap-3">
+                Close
+              </button>
+            </div>
+
+            <div className="space-y-1">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="block rounded-xl px-3 py-2.5 text-base font-medium text-slate-200 transition hover:bg-white/5 hover:text-white"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 gap-2.5">
               <Button href="/book" className="w-full">
                 Book Slot
               </Button>
               <Button href={`tel:${business.phone.replace(/\s+/g, "")}`} variant="secondary" className="w-full">
                 Call
               </Button>
-              <Button href={`https://wa.me/${business.whatsapp.replace(/\D/g, "")}`} variant="secondary" className="col-span-2 w-full">
+              <Button
+                href={`https://wa.me/${business.whatsapp.replace(/\D/g, "")}`}
+                variant="secondary"
+                className="col-span-2 w-full"
+              >
                 WhatsApp
               </Button>
             </div>
