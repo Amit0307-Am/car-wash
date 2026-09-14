@@ -75,32 +75,46 @@ export default async function AdminTrashPage() {
   const bookings = await getTrashBookings();
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-sm font-medium uppercase tracking-[0.24em] text-amber-300">Admin trash</p>
-          <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Deleted bookings
-          </h1>
-        </div>
+    <main className="mx-auto max-w-7xl px-3 py-4 sm:px-6 lg:px-8">
+      <header className="sticky top-0 z-20 mb-4 rounded-2xl border border-white/10 bg-slate-950/85 px-3 py-2 backdrop-blur-sm">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-amber-300">
+              AutoGlow Admin
+            </p>
+            <h1 className="text-base font-bold text-white sm:text-lg">Trash</h1>
+          </div>
 
-        <div className="flex flex-wrap gap-3">
-          <Link
-            href="/admin"
-            className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:border-amber-400/60 hover:bg-white/10"
-          >
-            Back to dashboard
-          </Link>
-          <form action="/api/admin/logout" method="post">
-            <button
-              type="submit"
-              className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:border-amber-400/60 hover:bg-white/10"
+          <nav className="flex flex-wrap items-center gap-2 text-[11px] sm:text-xs">
+            <Link
+              href="/admin"
+              className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1.5 text-slate-200 transition hover:border-amber-400/40 hover:bg-white/10"
             >
-              Logout
-            </button>
-          </form>
+              Dashboard
+            </Link>
+            <Link
+              href="/admin/trash"
+              className="rounded-full border border-amber-400/50 bg-amber-500/10 px-2.5 py-1.5 text-amber-100"
+            >
+              Trash
+            </Link>
+            <Link
+              href="/"
+              className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1.5 text-slate-200 transition hover:border-amber-400/40 hover:bg-white/10"
+            >
+              View Website
+            </Link>
+            <form action="/api/admin/logout" method="post">
+              <button
+                type="submit"
+                className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1.5 text-slate-200 transition hover:border-amber-400/40 hover:bg-white/10"
+              >
+                Logout
+              </button>
+            </form>
+          </nav>
         </div>
-      </div>
+      </header>
 
       {bookings.length === 0 ? (
         <div className="rounded-[2rem] border border-dashed border-white/10 bg-slate-900/60 p-10 text-center">
@@ -108,75 +122,62 @@ export default async function AdminTrashPage() {
           <p className="mt-2 text-slate-400">Moved bookings will appear here so they can be restored or permanently deleted.</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {bookings.map((booking) => (
-            <div key={booking.id} className="rounded-[2rem] border border-white/10 bg-slate-900/80 p-4 shadow-2xl shadow-slate-950/40">
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                <div>
-                  <div className="text-[10px] uppercase tracking-[0.22em] text-slate-400">Booking code</div>
-                  <div className="mt-1 text-xl font-semibold text-white">{booking.booking_code}</div>
+            <div key={booking.id} className="rounded-2xl border border-white/10 bg-slate-900/80 p-3 shadow-lg shadow-slate-950/30">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Booking code</div>
+                  <div className="mt-1 text-sm font-semibold text-white">{booking.booking_code}</div>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${getStatusClasses(booking.status)}`}>
-                    {getStatusLabel(booking.status)}
+                <span className={`inline-flex rounded-full px-2 py-1 text-[10px] font-medium ${getStatusClasses(booking.status)}`}>
+                  {getStatusLabel(booking.status)}
+                </span>
+              </div>
+
+              <div className="mt-3 space-y-2 text-[11px] text-slate-300">
+                <div>
+                  <span className="text-slate-400">Customer:</span>{" "}
+                  <span className="text-white">{booking.customer_name}</span>
+                </div>
+                <div>
+                  <span className="text-slate-400">Service:</span>{" "}
+                  <span className="text-white">{booking.serviceName}</span>
+                </div>
+                <div>
+                  <span className="text-slate-400">Schedule:</span>{" "}
+                  <span className="text-white">{booking.booking_date} • {booking.booking_time}</span>
+                </div>
+                <div>
+                  <span className="text-slate-400">Deleted:</span>{" "}
+                  <span className="text-white">
+                    {booking.deleted_at ? new Date(booking.deleted_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }) : "Unknown"}
                   </span>
                 </div>
               </div>
 
-              <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                <div>
-                  <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Customer</p>
-                  <p className="mt-1 text-white">{booking.customer_name}</p>
-                  <p className="text-slate-400">{booking.mobile_number}</p>
-                </div>
-
-                <div>
-                  <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Service</p>
-                  <p className="mt-1 text-white">{booking.serviceName}</p>
-                </div>
-
-                <div>
-                  <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Vehicle</p>
-                  <p className="mt-1 text-white">{booking.vehicleTypeName}</p>
-                  <p className="text-slate-400">{booking.vehicle_model}</p>
-                  {booking.vehicle_number ? <p className="text-slate-500">{booking.vehicle_number}</p> : null}
-                </div>
-
-                <div>
-                  <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Schedule</p>
-                  <p className="mt-1 text-white">{booking.booking_date}</p>
-                  <p className="text-slate-400">{booking.booking_time}</p>
-                </div>
-              </div>
-
-              <div className="mt-4 flex flex-col gap-2 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-sm text-slate-400">
-                  Deleted: {booking.deleted_at ? new Date(booking.deleted_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }) : "Unknown"}
-                </div>
-
-                <div className="flex flex-col gap-2 sm:flex-row">
-                  <AdminActionForms
-                    bookingId={booking.id}
-                    returnTo="/admin/trash"
-                    actions={[
-                      {
-                        key: "restore",
-                        label: "Restore",
-                        action: "restore",
-                        variant: "emerald",
-                        confirmText: "Restore this booking?",
-                      },
-                      {
-                        key: "permanent-delete",
-                        label: "Delete Permanently",
-                        action: "permanent-delete",
-                        variant: "red",
-                        confirmText: "Permanently delete this booking? This action cannot be undone.",
-                      },
-                    ]}
-                  />
-                </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <AdminActionForms
+                  bookingId={booking.id}
+                  returnTo="/admin/trash"
+                  actions={[
+                    {
+                      key: "restore",
+                      label: "Restore",
+                      action: "restore",
+                      variant: "emerald",
+                      confirmText: "Restore this booking?",
+                    },
+                    {
+                      key: "permanent-delete",
+                      label: "Delete Permanently",
+                      action: "permanent-delete",
+                      variant: "red",
+                      confirmText: "Permanently delete this booking? This action cannot be undone.",
+                    },
+                  ]}
+                />
               </div>
             </div>
           ))}

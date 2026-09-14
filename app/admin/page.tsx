@@ -436,107 +436,121 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   const currentPath = "/admin";
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p className="text-sm font-medium uppercase tracking-[0.24em] text-amber-300">
-            Admin overview
-          </p>
-          <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl">
-            Booking dashboard
-          </h1>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3">
-          <Link
-            href="/admin/trash"
-            className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:border-amber-400/60 hover:bg-white/10"
-          >
-            Trash
-          </Link>
-          <form action="/api/admin/logout" method="post">
-            <button
-              type="submit"
-              className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:border-amber-400/60 hover:bg-white/10"
-            >
-              Logout
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <div className="mb-8 grid gap-4 md:grid-cols-4">
-        <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-5">
-          <p className="text-sm text-slate-400">Today&apos;s bookings</p>
-          <p className="mt-3 text-3xl font-bold text-white">{activeBookings.filter((booking) => booking.booking_date === today).length}</p>
-        </div>
-        <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-5">
-          <p className="text-sm text-slate-400">Pending today</p>
-          <p className="mt-3 text-3xl font-bold text-amber-300">{pendingToday}</p>
-        </div>
-        <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-5">
-          <p className="text-sm text-slate-400">Confirmed today</p>
-          <p className="mt-3 text-3xl font-bold text-emerald-300">{confirmedToday}</p>
-        </div>
-        <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-5">
-          <p className="text-sm text-slate-400">Completed today</p>
-          <p className="mt-3 text-3xl font-bold text-sky-300">{completedToday}</p>
-        </div>
-      </div>
-
-      <div className="mb-8 rounded-[2rem] border border-white/10 bg-slate-900/80 p-4 shadow-2xl shadow-slate-950/40">
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-wrap gap-2">
-            {(["today", "tomorrow", "this-week", "upcoming", "past", "all"] as DateFilter[]).map((filter) => (
-              <Link
-                key={filter}
-                href={buildAdminHref({ dateFilter: filter, status: statusFilter, search }, params)}
-                className={
-                  dateFilter === filter
-                    ? "rounded-full border border-amber-400/60 bg-amber-500/20 px-3 py-2 text-sm font-medium text-amber-100"
-                    : "rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-slate-200 transition hover:border-amber-400/40 hover:bg-white/10"
-                }
-              >
-                {getDateFilterLabel(filter)}
-              </Link>
-            ))}
+    <main className="mx-auto max-w-7xl px-3 py-4 sm:px-6 lg:px-8">
+      <header className="sticky top-0 z-20 mb-4 rounded-2xl border border-white/10 bg-slate-950/85 px-3 py-2 backdrop-blur-sm">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-amber-300">
+              AutoGlow Admin
+            </p>
+            <h1 className="text-base font-bold text-white sm:text-lg">Dashboard</h1>
           </div>
 
-          <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-            <div className="flex flex-wrap gap-2">
+          <nav className="flex flex-wrap items-center gap-2 text-[11px] sm:text-xs">
+            <Link
+              href="/admin"
+              className="rounded-full border border-amber-400/50 bg-amber-500/10 px-2.5 py-1.5 text-amber-100"
+            >
+              Dashboard
+            </Link>
+            <Link
+              href="/admin/trash"
+              className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1.5 text-slate-200 transition hover:border-amber-400/40 hover:bg-white/10"
+            >
+              Trash
+            </Link>
+            <Link
+              href="/"
+              className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1.5 text-slate-200 transition hover:border-amber-400/40 hover:bg-white/10"
+            >
+              View Website
+            </Link>
+            <form action="/api/admin/logout" method="post">
+              <button
+                type="submit"
+                className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1.5 text-slate-200 transition hover:border-amber-400/40 hover:bg-white/10"
+              >
+                Logout
+              </button>
+            </form>
+          </nav>
+        </div>
+      </header>
+
+      <div className="mb-4 grid grid-cols-2 gap-2 md:grid-cols-4">
+        <div className="rounded-2xl border border-white/10 bg-slate-900/80 p-3">
+          <p className="text-[10px] uppercase tracking-[0.18em] text-slate-400">Today&apos;s bookings</p>
+          <p className="mt-2 text-2xl font-bold text-white">{activeBookings.filter((booking) => booking.booking_date === today).length}</p>
+        </div>
+        <div className="rounded-2xl border border-white/10 bg-slate-900/80 p-3">
+          <p className="text-[10px] uppercase tracking-[0.18em] text-slate-400">Pending</p>
+          <p className="mt-2 text-2xl font-bold text-amber-300">{pendingToday}</p>
+        </div>
+        <div className="rounded-2xl border border-white/10 bg-slate-900/80 p-3">
+          <p className="text-[10px] uppercase tracking-[0.18em] text-slate-400">Confirmed</p>
+          <p className="mt-2 text-2xl font-bold text-emerald-300">{confirmedToday}</p>
+        </div>
+        <div className="rounded-2xl border border-white/10 bg-slate-900/80 p-3">
+          <p className="text-[10px] uppercase tracking-[0.18em] text-slate-400">Completed</p>
+          <p className="mt-2 text-2xl font-bold text-sky-300">{completedToday}</p>
+        </div>
+      </div>
+
+      <div className="mb-4 rounded-2xl border border-white/10 bg-slate-900/80 p-3 shadow-lg shadow-slate-950/30">
+        <div className="flex flex-col gap-3">
+          <div className="overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex min-w-max gap-2">
+              {(["today", "tomorrow", "this-week", "upcoming", "past", "all"] as DateFilter[]).map((filter) => (
+                <Link
+                  key={filter}
+                  href={buildAdminHref({ dateFilter: filter, status: statusFilter, search }, params)}
+                  className={
+                    dateFilter === filter
+                      ? "rounded-full border border-amber-400/60 bg-amber-500/20 px-3 py-1.5 text-xs font-medium text-amber-100"
+                      : "rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-slate-200 transition hover:border-amber-400/40 hover:bg-white/10"
+                  }
+                >
+                  {getDateFilterLabel(filter)}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex min-w-max gap-2">
               {(["all", "pending", "confirmed", "completed", "cancelled"] as StatusFilter[]).map((filter) => (
                 <Link
                   key={filter}
                   href={buildAdminHref({ dateFilter, status: filter, search }, params)}
                   className={
                     statusFilter === filter
-                      ? "rounded-full border border-emerald-400/60 bg-emerald-500/20 px-3 py-2 text-sm font-medium text-emerald-100"
-                      : "rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-slate-200 transition hover:border-emerald-400/40 hover:bg-white/10"
+                      ? "rounded-full border border-emerald-400/60 bg-emerald-500/20 px-3 py-1.5 text-xs font-medium text-emerald-100"
+                      : "rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-slate-200 transition hover:border-emerald-400/40 hover:bg-white/10"
                   }
                 >
                   {filter === "all" ? "All statuses" : getStatusLabel(filter)}
                 </Link>
               ))}
             </div>
-
-            <form method="get" action="/admin" className="flex w-full max-w-xl flex-col gap-2 sm:flex-row">
-              <input type="hidden" name="dateFilter" value={dateFilter} />
-              <input type="hidden" name="status" value={statusFilter} />
-              <input
-                type="search"
-                name="search"
-                defaultValue={search}
-                placeholder="Search name, mobile, booking code, vehicle..."
-                className="w-full rounded-full border border-white/10 bg-slate-950/60 px-4 py-2.5 text-sm text-white outline-none transition placeholder:text-slate-400 focus:border-amber-400/60"
-              />
-              <button
-                type="submit"
-                className="rounded-full border border-amber-400/60 bg-amber-500/20 px-4 py-2.5 text-sm font-medium text-amber-100"
-              >
-                Search
-              </button>
-            </form>
           </div>
+
+          <form method="get" action="/admin" className="flex w-full gap-2">
+            <input type="hidden" name="dateFilter" value={dateFilter} />
+            <input type="hidden" name="status" value={statusFilter} />
+            <input
+              type="search"
+              name="search"
+              defaultValue={search}
+              placeholder="Search customer, mobile, booking ID, vehicle..."
+              className="w-full rounded-full border border-white/10 bg-slate-950/60 px-3 py-2 text-sm text-white outline-none transition placeholder:text-slate-400 focus:border-amber-400/60"
+            />
+            <button
+              type="submit"
+              className="rounded-full border border-amber-400/60 bg-amber-500/20 px-3 py-2 text-xs font-medium text-amber-100"
+            >
+              Search
+            </button>
+          </form>
         </div>
       </div>
 
@@ -701,52 +715,36 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 </div>
               </div>
 
-              <div className="space-y-4 p-4 md:hidden">
+              <div className="space-y-3 p-3 md:hidden">
                 {bookingsForDate.map((booking) => (
                   <div
                     key={booking.id}
-                    className="rounded-3xl border border-white/10 bg-slate-950/45 p-4"
+                    className="rounded-2xl border border-white/10 bg-slate-950/45 p-3"
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <div className="text-[10px] uppercase tracking-[0.22em] text-slate-400">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
                           {booking.booking_time}
                         </div>
-                        <div className="mt-1 text-lg font-semibold text-white">{booking.booking_code}</div>
+                        <div className="mt-1 text-base font-semibold text-white">{booking.customer_name}</div>
+                        <div className="mt-0.5 text-[11px] text-slate-300">{booking.serviceName}</div>
                       </div>
                       <span
-                        className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-medium ${getStatusClasses(booking.status)}`}
+                        className={`inline-flex rounded-full px-2 py-1 text-[10px] font-medium ${getStatusClasses(booking.status)}`}
                       >
                         {getStatusLabel(booking.status)}
                       </span>
                     </div>
 
-                    <div className="mt-4 space-y-3 text-sm text-slate-300">
-                      <div>
-                        <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Customer</p>
-                        <p className="mt-1 font-medium text-white">{booking.customer_name}</p>
-                        <p className="text-slate-400">{booking.mobile_number}</p>
-                      </div>
-
-                      <div>
-                        <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Service</p>
-                        <p className="mt-1 text-white">{booking.serviceName}</p>
-                      </div>
-
-                      <div>
-                        <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Vehicle</p>
-                        <p className="mt-1 text-white">{booking.vehicleTypeName}</p>
-                        <p className="text-slate-400">{booking.vehicle_model}</p>
-                        {booking.vehicle_number ? (
-                          <p className="text-slate-500">{booking.vehicle_number}</p>
-                        ) : null}
-                      </div>
+                    <div className="mt-3 flex items-center justify-between gap-2 border-t border-white/10 pt-2 text-[10px] text-slate-400">
+                      <span>Code: {booking.booking_code}</span>
+                      <span>{booking.vehicleTypeName}</span>
                     </div>
 
-                    <div className="mt-4 grid grid-cols-2 gap-2">
+                    <div className="mt-3 grid grid-cols-2 gap-2">
                       <a
                         href={getPhoneHref(booking.mobile_number)}
-                        className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-center text-sm font-medium text-white"
+                        className="rounded-full border border-white/10 bg-white/5 px-2.5 py-2 text-center text-xs font-medium text-white"
                       >
                         Call
                       </a>
@@ -754,13 +752,53 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                         href={getWhatsappHref(booking)}
                         target="_blank"
                         rel="noreferrer"
-                        className="rounded-full border border-emerald-500/50 bg-emerald-500/10 px-3 py-2 text-center text-sm font-medium text-emerald-200"
+                        className="rounded-full border border-emerald-500/50 bg-emerald-500/10 px-2.5 py-2 text-center text-xs font-medium text-emerald-200"
                       >
                         WhatsApp
                       </a>
                     </div>
 
-                    <div className="mt-4 flex flex-col gap-2">
+                    <details className="mt-3 rounded-xl border border-white/10 bg-slate-900/60 p-2">
+                      <summary className="cursor-pointer list-none text-[11px] font-medium text-amber-200">
+                        View details
+                      </summary>
+                      <div className="mt-2 space-y-1.5 text-[10px] text-slate-300">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-slate-400">Booking code</span>
+                          <span className="text-right text-white">{booking.booking_code}</span>
+                        </div>
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-slate-400">Vehicle</span>
+                          <span className="text-right text-white">{booking.vehicle_model}</span>
+                        </div>
+                        {booking.vehicle_number ? (
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-slate-400">Reg</span>
+                            <span className="text-right text-white">{booking.vehicle_number}</span>
+                          </div>
+                        ) : null}
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-slate-400">Price</span>
+                          <span className="text-right text-white">₹{booking.price_snapshot}</span>
+                        </div>
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-slate-400">Phone</span>
+                          <span className="text-right text-white">{booking.mobile_number}</span>
+                        </div>
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-slate-400">Date</span>
+                          <span className="text-right text-white">{booking.booking_date}</span>
+                        </div>
+                        {booking.notes ? (
+                          <div className="pt-1">
+                            <span className="text-slate-400">Notes</span>
+                            <p className="mt-1 text-white">{booking.notes}</p>
+                          </div>
+                        ) : null}
+                      </div>
+                    </details>
+
+                    <div className="mt-3 flex flex-wrap gap-2">
                       {getActionButtons(booking, currentPath)}
                     </div>
                   </div>
