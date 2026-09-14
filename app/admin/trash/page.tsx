@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { AdminActionForms } from "@/components/admin/admin-action-forms";
 import { requireAdminAccess } from "@/lib/admin/auth";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
@@ -155,41 +156,26 @@ export default async function AdminTrashPage() {
                 </div>
 
                 <div className="flex flex-col gap-2 sm:flex-row">
-                  <form
-                    action={`/api/admin/bookings/${booking.id}`}
-                    method="post"
-                    onSubmit={(event) => {
-                      if (!window.confirm("Restore this booking?")) {
-                        event.preventDefault();
-                      }
-                    }}
-                  >
-                    <input type="hidden" name="action" value="restore" />
-                    <button
-                      type="submit"
-                      className="w-full rounded-full border border-emerald-500/50 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-200 transition hover:bg-emerald-500/20"
-                    >
-                      Restore
-                    </button>
-                  </form>
-
-                  <form
-                    action={`/api/admin/bookings/${booking.id}`}
-                    method="post"
-                    onSubmit={(event) => {
-                      if (!window.confirm("Permanently delete this booking? This action cannot be undone.")) {
-                        event.preventDefault();
-                      }
-                    }}
-                  >
-                    <input type="hidden" name="action" value="permanent-delete" />
-                    <button
-                      type="submit"
-                      className="w-full rounded-full border border-red-500/50 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-200 transition hover:bg-red-500/20"
-                    >
-                      Delete Permanently
-                    </button>
-                  </form>
+                  <AdminActionForms
+                    bookingId={booking.id}
+                    returnTo="/admin/trash"
+                    actions={[
+                      {
+                        key: "restore",
+                        label: "Restore",
+                        action: "restore",
+                        variant: "emerald",
+                        confirmText: "Restore this booking?",
+                      },
+                      {
+                        key: "permanent-delete",
+                        label: "Delete Permanently",
+                        action: "permanent-delete",
+                        variant: "red",
+                        confirmText: "Permanently delete this booking? This action cannot be undone.",
+                      },
+                    ]}
+                  />
                 </div>
               </div>
             </div>

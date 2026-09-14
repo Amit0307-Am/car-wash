@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { AdminActionForms } from "@/components/admin/admin-action-forms";
 import { requireAdminAccess } from "@/lib/admin/auth";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { bookingSlots } from "@/config/business";
@@ -336,7 +337,13 @@ function getActionButtons(booking: BookingRow, currentPath: string) {
     return null;
   }
 
-  const buttons: { key: string; label: string; action: string; variant: string; confirmText?: string }[] = [];
+  const buttons: Array<{
+    key: string;
+    label: string;
+    action: string;
+    variant: "emerald" | "sky" | "red" | "slate";
+    confirmText?: string;
+  }> = [];
 
   if (booking.status === "pending") {
     buttons.push({ key: "confirm", label: "Confirm", action: "confirm", variant: "emerald" });
@@ -358,40 +365,7 @@ function getActionButtons(booking: BookingRow, currentPath: string) {
     confirmText: "Move this booking to Trash? You can restore it later.",
   });
 
-  return buttons.map((button) => (
-    <form
-      key={button.key}
-      action={`/api/admin/bookings/${booking.id}`}
-      method="post"
-      className="flex-1"
-      onSubmit={
-        button.confirmText
-          ? (event) => {
-              if (!window.confirm(button.confirmText ?? "Confirm this action?")) {
-                event.preventDefault();
-              }
-            }
-          : undefined
-      }
-    >
-      <input type="hidden" name="action" value={button.action} />
-      <input type="hidden" name="returnTo" value={returnTo} />
-      <button
-        type="submit"
-        className={
-          button.variant === "emerald"
-            ? "w-full rounded-full border border-emerald-500/50 bg-emerald-500/10 px-3 py-2 text-sm font-medium text-emerald-200 transition hover:bg-emerald-500/20"
-            : button.variant === "sky"
-              ? "w-full rounded-full border border-sky-500/50 bg-sky-500/10 px-3 py-2 text-sm font-medium text-sky-200 transition hover:bg-sky-500/20"
-              : button.variant === "red"
-                ? "w-full rounded-full border border-red-500/50 bg-red-500/10 px-3 py-2 text-sm font-medium text-red-200 transition hover:bg-red-500/20"
-                : "w-full rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/10"
-        }
-      >
-        {button.label}
-      </button>
-    </form>
-  ));
+  return <AdminActionForms bookingId={booking.id} returnTo={returnTo} actions={buttons} />;
 }
 
 export default async function AdminPage({ searchParams }: AdminPageProps) {
