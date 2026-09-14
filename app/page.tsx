@@ -65,18 +65,14 @@ export default function Home() {
             </div>
 
             <div className="order-3 lg:col-span-full">
-              <div className="grid gap-3 sm:grid-cols-3">
-                <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-3">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Opening hours</p>
-                  <p className="mt-1 text-sm font-medium text-white">{business.openingHours}</p>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-xl border border-white/10 bg-slate-900/60 p-2.5">
+                  <p className="text-[9px] uppercase tracking-[0.2em] text-slate-400">Opening hours</p>
+                  <p className="mt-1 text-xs font-medium text-white">{business.openingHours}</p>
                 </div>
-                <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-3">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Location</p>
-                  <p className="mt-1 text-sm font-medium text-white">{business.location}</p>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-3">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Google rating</p>
-                  <p className="mt-1 text-sm font-medium text-white">{business.googleRating}</p>
+                <div className="rounded-xl border border-white/10 bg-slate-900/60 p-2.5">
+                  <p className="text-[9px] uppercase tracking-[0.2em] text-slate-400">Location</p>
+                  <p className="mt-1 text-xs font-medium text-white">{business.location}</p>
                 </div>
               </div>
             </div>
@@ -120,14 +116,14 @@ export default function Home() {
           description="Fast enough for mobile users, clear enough for new customers, and easy to extend later."
         />
 
-        <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-2 xl:grid-cols-4">
           {howItWorks.map((item, index) => (
-            <div key={item.title} className="rounded-3xl border border-white/10 bg-slate-900/80 p-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-500 text-sm font-black text-slate-950">
+            <div key={item.title} className="rounded-2xl border border-white/10 bg-slate-900/80 p-4">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500 text-xs font-black text-slate-950">
                 {index + 1}
               </div>
-              <h3 className="mt-5 text-xl font-semibold text-white">{item.title}</h3>
-              <p className="mt-3 text-sm leading-7 text-slate-300">{item.description}</p>
+              <h3 className="mt-3 text-base font-semibold text-white">{item.title}</h3>
+              <p className="mt-2 text-xs leading-5 text-slate-300">{item.description}</p>
             </div>
           ))}
         </div>

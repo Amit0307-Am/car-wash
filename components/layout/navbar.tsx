@@ -97,25 +97,25 @@ export function Navbar() {
 
       {menuOpen ? (
         <div id="mobile-menu" className="border-t border-white/10 bg-slate-950 lg:hidden">
-          <div className="mx-auto max-w-7xl px-4 py-3">
-            <div className="mb-2 flex items-center justify-between">
+          <div className="mx-auto max-w-7xl px-4 py-2">
+            <div className="mb-1.5 flex items-center justify-between">
               <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-slate-400">Menu</p>
               <button
                 type="button"
                 aria-label="Close navigation menu"
-                className="rounded-full border border-white/10 px-2.5 py-1 text-xs font-medium text-slate-200 hover:border-amber-400/60 hover:text-white"
+                className="rounded-full border border-white/10 px-2 py-0.5 text-[11px] font-medium text-slate-200 hover:border-amber-400/60 hover:text-white"
                 onClick={() => setMenuOpen(false)}
               >
                 Close
               </button>
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="block rounded-xl px-3 py-2.5 text-base font-medium text-slate-200 transition hover:bg-white/5 hover:text-white"
+                  className="block rounded-lg px-3 py-2 text-base font-medium text-slate-200 transition hover:bg-white/5 hover:text-white"
                   onClick={() => setMenuOpen(false)}
                 >
                   {item.label}
@@ -123,20 +123,18 @@ export function Navbar() {
               ))}
             </div>
 
-            <div className="mt-4 grid grid-cols-2 gap-2.5">
-              <Button href="/book" className="w-full">
-                Book Slot
-              </Button>
-              <Button href={`tel:${business.phone.replace(/\s+/g, "")}`} variant="secondary" className="w-full">
-                Call
-              </Button>
-              <Button
-                href={`https://wa.me/${business.whatsapp.replace(/\D/g, "")}`}
-                variant="secondary"
-                className="col-span-2 w-full"
-              >
-                WhatsApp
-              </Button>
+            <div className="mt-2 border-t border-white/10 pt-2">
+              <div className="grid grid-cols-2 gap-2">
+                <Button href="/book" className="col-span-2 w-full">
+                  Book Slot
+                </Button>
+                <Button href={`https://wa.me/${business.whatsapp.replace(/\D/g, "")}`} variant="secondary" className="w-full">
+                  WhatsApp
+                </Button>
+                <Button href={`tel:${business.phone.replace(/\s+/g, "")}`} variant="secondary" className="w-full">
+                  Call
+                </Button>
+              </div>
             </div>
           </div>
         </div>
